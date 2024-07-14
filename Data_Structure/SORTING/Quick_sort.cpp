@@ -3,63 +3,47 @@
 
 using namespace std;
 
-// Iterative Binary Search
-int binarySearchIterative(const vector<int>& arr, int target) {
-    int left = 0;
-    int right = arr.size() - 1;
+int partition(vector<int>& arr, int low, int high) {
+    int pivot = arr[high];
+    int i = low - 1;
 
-    while (left <= right) {
-        int mid = left + (right - left) / 2;
-
-        if (arr[mid] == target) {
-            return mid;
-        }
-        if (arr[mid] < target) {
-            left = mid + 1;
-        } else {
-            right = mid - 1;
+    for (int j = low; j < high; j++) {
+        if (arr[j] <= pivot) {
+            i++;
+            swap(arr[i], arr[j]);
         }
     }
-
-    return -1;  // Target not found
+    swap(arr[i + 1], arr[high]);
+    return i + 1;
 }
 
-// Recursive Binary Search
-int binarySearchRecursive(const vector<int>& arr, int target, int left, int right) {
-    if (left <= right) {
-        int mid = left + (right - left) / 2;
+void quickSort(vector<int>& arr, int low, int high) {
+    if (low < high) {
+        int pi = partition(arr, low, high);
 
-        if (arr[mid] == target) {
-            return mid;
-        }
-        if (arr[mid] < target) {
-            return binarySearchRecursive(arr, target, mid + 1, right);
-        }
-        return binarySearchRecursive(arr, target, left, mid - 1);
+        quickSort(arr, low, pi - 1);
+        quickSort(arr, pi + 1, high);
     }
+}
 
-    return -1;  // Target not found
+void printArray(const vector<int>& arr) {
+    for (int num : arr) {
+        cout << num << " ";
+    }
+    cout << endl;
 }
 
 int main() {
-    vector<int> arr = {2, 3, 4, 10, 40};
-    int target = 10;
+    vector<int> arr = {10, 7, 8, 9, 1, 5};
+    int n = arr.size();
 
-    // Iterative search
-    int iterativeResult = binarySearchIterative(arr, target);
-    if (iterativeResult != -1) {
-        cout << "Iterative: Element found at index " << iterativeResult << endl;
-    } else {
-        cout << "Iterative: Element not found in the array" << endl;
-    }
+    cout << "Original array: ";
+    printArray(arr);
 
-    // Recursive search
-    int recursiveResult = binarySearchRecursive(arr, target, 0, arr.size() - 1);
-    if (recursiveResult != -1) {
-        cout << "Recursive: Element found at index " << recursiveResult << endl;
-    } else {
-        cout << "Recursive: Element not found in the array" << endl;
-    }
+    quickSort(arr, 0, n - 1);
+
+    cout << "Sorted array: ";
+    printArray(arr);
 
     return 0;
 }
