@@ -1,41 +1,65 @@
-#include<bits/stdc++.h>
+#include <iostream>
+#include <vector>
+
 using namespace std;
 
-int binary(int a[] , int key){
-    int low =  0;
-    int high = sizeof(a) / sizeof(a[0]) - 1;
+// Iterative Binary Search
+int binarySearchIterative(const vector<int>& arr, int target) {
+    int left = 0;
+    int right = arr.size() - 1;
 
-    while(low < high){
-        int mid = (low+high)/2;
+    while (left <= right) {
+        int mid = left + (right - left) / 2;
 
-        if(a[mid] == key){
+        if (arr[mid] == target) {
             return mid;
         }
-
-        else if(a[mid] > key){
-            high = mid - 1;
-        }
-
-        else {
-            low = mid;
+        if (arr[mid] < target) {
+            left = mid + 1;
+        } else {
+            right = mid - 1;
         }
     }
 
-    return 0;
+    return -1;  // Target not found
 }
 
-int main(){
-    int n; cin>>n;
-    int a[n];
-    for(int i=0;i<n;i++){
-        int x; cin>>x;
-        a[i] = x;
+// Recursive Binary Search
+int binarySearchRecursive(const vector<int>& arr, int target, int left, int right) {
+    if (left <= right) {
+        int mid = left + (right - left) / 2;
+
+        if (arr[mid] == target) {
+            return mid;
+        }
+        if (arr[mid] < target) {
+            return binarySearchRecursive(arr, target, mid + 1, right);
+        }
+        return binarySearchRecursive(arr, target, left, mid - 1);
     }
 
-    int key; cin>>key;
+    return -1;  // Target not found
+}
 
-    int index = binary(a,key);
+int main() {
+    vector<int> arr = {2, 3, 4, 10, 40};
+    int target = 10;
 
-    cout<<index;
+    // Iterative search
+    int iterativeResult = binarySearchIterative(arr, target);
+    if (iterativeResult != -1) {
+        cout << "Iterative: Element found at index " << iterativeResult << endl;
+    } else {
+        cout << "Iterative: Element not found in the array" << endl;
+    }
+
+    // Recursive search
+    int recursiveResult = binarySearchRecursive(arr, target, 0, arr.size() - 1);
+    if (recursiveResult != -1) {
+        cout << "Recursive: Element found at index " << recursiveResult << endl;
+    } else {
+        cout << "Recursive: Element not found in the array" << endl;
+    }
+
     return 0;
 }
